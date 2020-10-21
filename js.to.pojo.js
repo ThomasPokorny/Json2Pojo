@@ -20,6 +20,9 @@ function toPojo(pojos, jsonString, identifier) {
         if(typeof obj[key] == 'number') {
             pojo += '\tpublic Integer '  + key + ';\n';
         } else
+        if(typeof obj[key] == 'boolean') {
+            pojo += '\tpublic boolean '  + key + ';\n';
+        } else
         if (Array.isArray(obj[key])) {
 
             if((obj[key]).length == 0 ) {
@@ -30,6 +33,9 @@ function toPojo(pojos, jsonString, identifier) {
             } else 
             if(typeof (obj[key])[0] == 'number') {        
                 pojo += '\tpublic List<Integer> '  + key + ';\n';
+            } else 
+            if(typeof (obj[key])[0] == 'boolean') {        
+                pojo += '\tpublic List<Boolean> '  + key + ';\n';
             } else {
                 pojo += '\tpublic List<' + capitalize(key) + '> '  + key + ';\n';
                 subClasses.push({fieldName: key, val:obj[key][0] });
