@@ -4,51 +4,53 @@ const mySet = new Set('string', 'integer');
 //ar obj = { first: "John", last: 1, em:  [ {a:1} ,  {a:1}] };
 
 
-function toPojo(jsonString, identifier) {
+function toPojo(pojos, jsonString, identifier) {
     let obj = JSON.parse(jsonString);
 
+    let pojo = '';
     let subClasses = [];
     // TODO: save in var  
     // NOTE: this is a fast draft oin where the result is just printed to the console
-    console.log('public class ' + identifier + ' {');
+    pojo += 'public class ' + identifier + ' {\n';
 
     Object.keys(obj).forEach(function(key) {
         if(typeof obj[key] == 'string') {
-            console.log('\tpublic String '  + key + ';');
+            pojo += '\tpublic String '  + key + ';\n';
         } else
         if(typeof obj[key] == 'number') {
-            console.log('\tpublic Integer '  + key + ';');
+            pojo += '\tpublic Integer '  + key + ';\n';
         } else
         if (Array.isArray(obj[key])) {
 
             if((obj[key]).length == 0 ) {
-                console.log('\tpublic List<Object> '  + key + ';');
+                pojo += '\tpublic List<Object> '  + key + ';\n';
             } else 
             if(typeof (obj[key])[0] == 'string') {        
-                console.log('\tpublic List<String> '  + key + ';');
+                pojo += '\tpublic List<String> '  + key + ';\n';
             } else 
             if(typeof (obj[key])[0] == 'number') {        
-                console.log('\tpublic List<Integer> '  + key + ';');
+                pojo += '\tpublic List<Integer> '  + key + ';\n';
             } else {
-                console.log('\tpublic List<' + capitalize(key) + '> '  + key + ';');
+                pojo += '\tpublic List<' + capitalize(key) + '> '  + key + ';\n';
                 subClasses.push({fieldName: key, val:obj[key][0] });
             }
 
         }  else 
         if(obj[key] == null) {
-            console.log('\tpublic Object '  + key + ';');
+            pojo += '\tpublic Object '  + key + ';\n';
         } else 
         {
-            console.log('\tpublic ' + capitalize(key) + ' '  + key + ';');
+            pojo += '\tpublic ' + capitalize(key) + ' '  + key + ';\n';
             subClasses.push({fieldName: key, val:obj[key]});
         }
     });
 
-    console.log('}');
-    console.log('');
+    pojo += '}';
+
+    pojos.push(pojo);
 
     subClasses.forEach(c => {
-        toPojo(JSON.stringify(c.val), capitalize(c.fieldName));
+        toPojo(pojos, JSON.stringify(c.val), capitalize(c.fieldName));
     });
 }
 
@@ -57,6 +59,13 @@ const capitalize = (s) => {
     return s.charAt(0).toUpperCase() + s.slice(1)
   }
 
-let json = '{"menu": "we", "something": {"a1":12 , "a2":"sd"}, "hello":null , "arr": [1,2,3,4], "names": ["1","2","3","4"], "geeks":[{"c":"", "c1":""} ,{"c":"", "c1":""} ] }';
-toPojo(json, 'RootElement');
-//console.log(fields);
+const parse = () => {
+    let pojos = [];
+    let json = document.getElementById("json").value;
+
+    toPojo(pojos, json, 'RootElement');
+
+    pojos.forEach(p => {
+        document.getElementById("pojos").value += p + '\n';    
+    })
+}  
