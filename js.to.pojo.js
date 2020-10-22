@@ -1,18 +1,11 @@
-
-const mySet = new Set('string', 'integer');
-
-//ar obj = { first: "John", last: 1, em:  [ {a:1} ,  {a:1}] };
-
-
 function toPojo(pojos, jsonString, identifier) {
     let obj = JSON.parse(jsonString);
 
     let pojo = '';
     let subClasses = [];
-    // TODO: save in var  
-    // NOTE: this is a fast draft oin where the result is just printed to the console
-    pojo += 'public class ' + identifier + ' {\n';
 
+    pojo += 'public class ' + identifier + ' {\n';
+    
     Object.keys(obj).forEach(function(key) {
         if(typeof obj[key] == 'string') {
             pojo += '\tpublic String '  + key + ';\n';
