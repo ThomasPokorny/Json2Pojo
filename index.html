@@ -32,19 +32,27 @@
             <div class="col s12">Insert JSON to convert</div>
             <div class="col s6">
                 <div class="input-field col s12">
-                    <textarea id="json" placeholder="JSON" class="materialize-textarea" style="height: 60vh; width:100%; border-color: #26a69a; border-style: solid; border-width: 1px; overflow-y: scroll; font-family: 'Courier New'; font-size:1.8vh; padding: 10px;"  ></textarea>
+                    <textarea id="json" placeholder="JSON" class="materialize-textarea" style="height: 60vh; width:100%; border-color: #208C81; border-style: solid; border-width: 1px; overflow-y: scroll; font-family: 'Courier New'; font-size:1.8vh; padding: 10px;"  ></textarea>
                     <!-- <label for="json" style="margin-left: 3vh;;" >JSON</label>-->
                 </div>
             </div>
 
             <div class="col s6">
                 <div class="input-field col s12">
-                    <textarea id="pojos" placeholder="Some Vanilla Java Thing" readonly class="materialize-textarea"  style="height: 60vh; width:100%; border-color: #26a69a; border-style: solid; border-width: 1px; overflow-y: scroll; font-family: 'Courier New'; font-size:1.8vh; padding: 10px;"  ></textarea>
+                    <textarea id="pojos" placeholder="Some Vanilla Java Thing" readonly class="materialize-textarea"  style="height: 60vh; width:100%; border-color: #A6322E; border-style: solid; border-width: 1px; overflow-y: scroll; font-family: 'Courier New'; font-size:1.8vh; padding: 10px;"  ></textarea>
                     <!--<label for="pojos" style="margin-left: 3vh;;" >Some Vanilla Java Thing</label>-->
                 </div>
             </div>
             <div class="col s12" style="text-align: center;">
+                
+                <div class="row">
+                    Name for your root element class:
+                    <input placeholder="RootElement" id="root-element" type="text" style="width: 20vh; margin-right: 5vh; margin-left: 2vh;">
+                   
+              
+
                 <a class="waves-effect waves-light btn-large" onclick="parse()" ><i class="material-icons right">send</i> convert</a>
+                </div>
             </div>
           </div>
         </div>

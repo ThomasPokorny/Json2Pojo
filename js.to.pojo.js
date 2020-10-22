@@ -5,7 +5,7 @@ function toPojo(pojos, jsonString, identifier) {
     let subClasses = [];
 
     pojo += 'public class ' + identifier + ' {\n';
-    
+
     Object.keys(obj).forEach(function(key) {
         if(typeof obj[key] == 'string') {
             pojo += '\tpublic String '  + key + ';\n';
@@ -59,12 +59,25 @@ const capitalize = (s) => {
   }
 
 const parse = () => {
-    let pojos = [];
-    let json = document.getElementById("json").value;
+    
+    // clear converter textarea
+    document.getElementById("pojos").value = ''; 
+    let rootElementClassName = document.getElementById("root-element").value;
 
-    toPojo(pojos, json, 'RootElement');
+    if(rootElementClassName == '') {
+        rootElementClassName = 'RootElement';
+    }
 
-    pojos.forEach(p => {
-        document.getElementById("pojos").value += p + '\n';    
-    })
+    try{
+        let pojos = [];
+        let json = document.getElementById("json").value;
+
+        toPojo(pojos, json,  rootElementClassName);
+
+        pojos.forEach(p => {
+            document.getElementById("pojos").value += p + '\n\n';    
+        }) 
+    }catch (error){
+        document.getElementById("pojos").value = 'Error parsing JSON';
+    } 
 }  
