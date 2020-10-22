@@ -1,16 +1,62 @@
 <html>
     <head>
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+        <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
         <script src="js.to.pojo.js"></script>
+        
+        <style>
+          ::placeholder { /* Most modern browsers support this now. */
+            color:    #5a5a5a;
+            }
+
+        </style>
+        
     </head>
     <body>
-        <h1> jsToPojo </h1>
-        <p>enter json</p>
-        <form>
-            <input type="text" id="json" ><br><br>
-            <input type="button" value="Click me" onclick="parse()">
-        </form>
-        <textarea id="pojos">
+        <div style="height: 94vh;">
+        <nav>
+            <div class="nav-wrapper" style="background-color: #1A736A;">
+              <a href="#" class="brand-logo" style="margin-left: 4vh; font-family: 'Raleway', sans-serif;"> <i class="material-icons right">terrain</i> Json2Pojo  </a> 
+            </div>
+          </nav>
+          
+        
+        <div class="row" style="margin-top: 3vh;">
+            <div class="col s12">Insert JSON to convert</div>
+            <div class="col s6">
+                <div class="input-field col s12">
+                    <textarea id="json" placeholder="JSON" class="materialize-textarea" style="height: 60vh; width:100%; border-color: #26a69a; border-style: solid; border-width: 1px; overflow-y: scroll; font-family: 'Courier New'; font-size:1.8vh; padding: 10px;"  ></textarea>
+                    <!-- <label for="json" style="margin-left: 3vh;;" >JSON</label>-->
+                </div>
+            </div>
 
-        </textarea>
+            <div class="col s6">
+                <div class="input-field col s12">
+                    <textarea id="pojos" placeholder="Some Vanilla Java Thing" readonly class="materialize-textarea"  style="height: 60vh; width:100%; border-color: #26a69a; border-style: solid; border-width: 1px; overflow-y: scroll; font-family: 'Courier New'; font-size:1.8vh; padding: 10px;"  ></textarea>
+                    <!--<label for="pojos" style="margin-left: 3vh;;" >Some Vanilla Java Thing</label>-->
+                </div>
+            </div>
+            <div class="col s12" style="text-align: center;">
+                <a class="waves-effect waves-light btn-large" onclick="parse()" ><i class="material-icons right">send</i> convert</a>
+            </div>
+          </div>
+        </div>
+
+          <footer class="page-footer bottom-footer" style="padding-top: 0px; height: 6vh; background: #282c35;">
+            <div class="footer-copyright">
+              <div class="container">
+              © 2020 Thomas Pokorny
+              <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+              </div>
+            </div>
+          </footer>
+
     </body>
 </html>
