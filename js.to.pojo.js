@@ -11,7 +11,10 @@ function toPojo(pojos, jsonString, identifier) {
             pojo += '\tpublic String '  + key + ';\n';
         } else
         if(typeof obj[key] == 'number') {
-            pojo += '\tpublic Integer '  + key + ';\n';
+            if( obj[key] % 1 === 0 )
+                pojo += '\tpublic Integer '  + key + ';\n';
+            else 
+                pojo += '\tpublic Double '  + key + ';\n';
         } else
         if(typeof obj[key] == 'boolean') {
             pojo += '\tpublic boolean '  + key + ';\n';
@@ -25,7 +28,10 @@ function toPojo(pojos, jsonString, identifier) {
                 pojo += '\tpublic List<String> '  + key + ';\n';
             } else 
             if(typeof (obj[key])[0] == 'number') {        
-                pojo += '\tpublic List<Integer> '  + key + ';\n';
+                if( (obj[key])[0]% 1 === 0 )
+                    pojo += '\tpublic List<Integer> '  + key + ';\n';
+                else   
+                    pojo += '\tpublic List<Double> '  + key + ';\n';
             } else 
             if(typeof (obj[key])[0] == 'boolean') {        
                 pojo += '\tpublic List<Boolean> '  + key + ';\n';
@@ -78,6 +84,7 @@ const parse = () => {
             document.getElementById("pojos").value += p + '\n\n';    
         }) 
     }catch (error){
+        console.log(error);
         document.getElementById("pojos").value = 'Error parsing JSON';
     } 
 }  
