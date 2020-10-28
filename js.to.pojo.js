@@ -11,24 +11,30 @@ function toPojo(pojos, jsonString, identifier) {
             pojo += '\tpublic String '  + key + ';\n';
         } else
         if(typeof obj[key] == 'number') {
-            if( obj[key] % 1 === 0 )
-                pojo += '\tpublic Integer '  + key + ';\n';
-            else 
+        	if(Number.isSafeInteger(obj[key])){
+        		pojo += '\tpublic Integer '  + key + ';\n';
+        	}else 
                 pojo += '\tpublic Double '  + key + ';\n';
         } else
         if(typeof obj[key] == 'boolean') {
             pojo += '\tpublic boolean '  + key + ';\n';
         } else
         if (Array.isArray(obj[key])) {
-
             if((obj[key]).length == 0 ) {
                 pojo += '\tpublic List<Object> '  + key + ';\n';
             } else 
             if(typeof (obj[key])[0] == 'string') {        
                 pojo += '\tpublic List<String> '  + key + ';\n';
             } else 
-            if(typeof (obj[key])[0] == 'number') {        
-                if( (obj[key])[0]% 1 === 0 )
+            if(typeof (obj[key])[0] == 'number') {
+            	isIntArray = true;
+            	for(number of obj[key]) {
+            		if(!(Number.isSafeInteger(number))){
+            			isIntArray = false;
+            			break;
+            		}
+    			}
+                if(isIntArray)
                     pojo += '\tpublic List<Integer> '  + key + ';\n';
                 else   
                     pojo += '\tpublic List<Double> '  + key + ';\n';
@@ -87,4 +93,10 @@ const parse = () => {
         console.log(error);
         document.getElementById("pojos").value = 'Error parsing JSON';
     } 
-}  
+}
+
+
+
+
+
+
