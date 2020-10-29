@@ -1,10 +1,12 @@
-function toPojo(pojos, jsonString, identifier) {
+function toPojo(pojos, jsonString, config) {
     let obj = JSON.parse(jsonString);
 
     let pojo = '';
     let subClasses = [];
 
-    pojo += 'public class ' + identifier + ' {\n';
+    let isListUsed = false;
+
+    pojo += 'public class ' + config.identifier + ' {\n';
 
     Object.keys(obj).forEach(function(key) {
         if(typeof obj[key] == 'string') {
@@ -46,6 +48,7 @@ function toPojo(pojos, jsonString, identifier) {
                 subClasses.push({fieldName: key, val:obj[key][0] });
             }
 
+            isListUsed = true;
         }  else 
         if(obj[key] == null) {
             pojo += '\tpublic Object '  + key + ';\n';
@@ -58,10 +61,18 @@ function toPojo(pojos, jsonString, identifier) {
 
     pojo += '}';
 
+    if(config.isCreateImpots && isListUsed) {
+        pojo = 'import java.util.List;\n' + pojo;
+    }
+
+    if(config.isPackage) {
+        pojo = 'package ' + config.packageDefinition + ';\n' + pojo;
+    }
     pojos.push(pojo);
 
     subClasses.forEach(c => {
-        toPojo(pojos, JSON.stringify(c.val), capitalize(c.fieldName));
+        config.identifier = capitalize(c.fieldName);
+        toPojo(pojos, JSON.stringify(c.val), config);
     });
 }
 
@@ -80,11 +91,29 @@ const parse = () => {
         rootElementClassName = 'RootElement';
     }
 
+    let packageDefinition = "com.foobar.pojo";
+    let isPackage = false;
+    if(document.getElementById('package-options').style.visibility == 'visible' && document.getElementById("package-definition").value != '') {
+        packageDefinition = document.getElementById("package-definition").value;
+        isPackage = true;
+    }
+
+    let isCreateImpots = false;
+    if(document.getElementById('advanced-options').style.visibility == 'visible' && document.getElementById("import-options").checked) {
+        isCreateImpots = true;
+    }
+
+    let config = {};
+    config.identifier = rootElementClassName;
+    config.packageDefinition = packageDefinition;
+    config.isPackage = isPackage;
+    config.isCreateImpots = isCreateImpots;
+
     try{
         let pojos = [];
         let json = document.getElementById("json").value;
 
-        toPojo(pojos, json,  rootElementClassName);
+        toPojo(pojos, json,  config);
 
         pojos.forEach(p => {
             document.getElementById("pojos").value += p + '\n\n';    
@@ -95,8 +124,11 @@ const parse = () => {
     } 
 }
 
-
-
-
-
-
+const optionsClick = (o) => {
+    let isVisible = document.getElementById(o).style.visibility;
+    if(isVisible == 'hidden') {
+        document.getElementById(o).style.visibility = 'visible';
+    } else {
+        document.getElementById(o).style.visibility = 'hidden';
+    }
+}
