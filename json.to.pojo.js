@@ -8,25 +8,49 @@ function toPojo(pojos, jsonString, config) {
 
     pojo += 'public class ' + config.identifier + ' {\n';
 
+    // NOTE: determin access modifier from config
+    let accessModifier = config.isPrivateFields ? 'private' : 'public';
+
+    // NOTE: getter and setter methods
+    let isCreateGS = config.isCreateGS;
+    let setterMethods = '';
+    let getterMethods = '';
+
+    // NOTE: builder methods
+    let isBuilder = config.isBuilder;
+    let builderMethods = '';
+
     Object.keys(obj).forEach(function(key) {
+        let fieldType = '';
+        let fieldsName = unCapitalize(key);
+
         if(typeof obj[key] == 'string') {
-            pojo += '\tpublic String '  + key + ';\n';
+            pojo += '\t' + accessModifier + ' String '  + unCapitalize(key) + ';\n';
+            
+            fieldType = 'String';
+
         } else
         if(typeof obj[key] == 'number') {
         	if(Number.isSafeInteger(obj[key])){
-        		pojo += '\tpublic Integer '  + key + ';\n';
-        	}else 
-                pojo += '\tpublic Double '  + key + ';\n';
+                pojo += '\t' + accessModifier + ' Integer '  + unCapitalize(key) + ';\n';
+                fieldType = 'Integer';
+        	}else {
+                pojo += '\t' + accessModifier + ' Double '  + unCapitalize(key) + ';\n';
+                fieldType = 'Double';
+            }
         } else
         if(typeof obj[key] == 'boolean') {
-            pojo += '\tpublic boolean '  + key + ';\n';
+            pojo += '\t' + accessModifier + ' boolean '  + unCapitalize(key) + ';\n';
+            fieldType = 'boolean';
         } else
         if (Array.isArray(obj[key])) {
             if((obj[key]).length == 0 ) {
-                pojo += '\tpublic List<Object> '  + key + ';\n';
+                pojo += '\t' + accessModifier + ' List<Object> '  + unCapitalize(key) + ';\n';
+                fieldType = 'List<Object>';
             } else 
             if(typeof (obj[key])[0] == 'string') {        
-                pojo += '\tpublic List<String> '  + key + ';\n';
+                pojo += '\t' + accessModifier + ' List<String> '  + unCapitalize(key) + ';\n';
+                fieldType = 'List<String>';
             } else 
             if(typeof (obj[key])[0] == 'number') {
             	isIntArray = true;
@@ -36,28 +60,58 @@ function toPojo(pojos, jsonString, config) {
             			break;
             		}
     			}
-                if(isIntArray)
-                    pojo += '\tpublic List<Integer> '  + key + ';\n';
-                else   
-                    pojo += '\tpublic List<Double> '  + key + ';\n';
+                if(isIntArray) {
+                    pojo += '\t' + accessModifier + ' List<Integer> '  + unCapitalize(key) + ';\n';
+                    fieldType = 'List<Integer>';
+                }
+                else {
+                    pojo += '\t' + accessModifier + ' List<Double> '  + unCapitalize(key) + ';\n';
+                    fieldType = 'List<Double>';
+                }
             } else 
             if(typeof (obj[key])[0] == 'boolean') {        
-                pojo += '\tpublic List<Boolean> '  + key + ';\n';
+                pojo += '\t' + accessModifier + ' List<Boolean> '  + unCapitalize(key) + ';\n';
+                fieldType = 'List<Boolean>';
             } else {
-                pojo += '\tpublic List<' + capitalize(key) + '> '  + key + ';\n';
+                pojo += '\t' + accessModifier + ' List<' + capitalize(key) + '> '  + unCapitalize(key) + ';\n';
                 subClasses.push({fieldName: key, val:obj[key][0] });
+                fieldType = 'List<' + capitalize(key) + '> ';
             }
 
             isListUsed = true;
         }  else 
         if(obj[key] == null) {
-            pojo += '\tpublic Object '  + key + ';\n';
+            pojo += '\t' + accessModifier + ' Object '  + unCapitalize(key) + ';\n';
+            fieldType = 'Object';
         } else 
         {
-            pojo += '\tpublic ' + capitalize(key) + ' '  + key + ';\n';
+            pojo += '\t' + accessModifier + ' ' + capitalize(key) + ' '  + unCapitalize(key) + ';\n';
             subClasses.push({fieldName: key, val:obj[key]});
+            fieldType = capitalize(key);
         }
+
+        // conditional creation of getters and setter
+        if(isCreateGS) {
+            setterMethods += '\n' + createSetter(fieldType, fieldsName);
+            getterMethods += '\n' + createGetter(fieldType, fieldsName);
+        }
+
+        // conditional creation of builder methods
+        if(isBuilder) {
+            builderMethods += '\n' + createBuilder(config.identifier, fieldType, fieldsName);
+        }
+
     });
+
+    // append conditional getter-, setter- and buildermethods to the pojo string
+    if(isBuilder) {
+        pojo += builderMethods;
+    }
+
+    if(isCreateGS) {
+        pojo += setterMethods;
+        pojo += getterMethods;
+    }
 
     pojo += '}';
 
@@ -76,7 +130,37 @@ function toPojo(pojos, jsonString, config) {
     });
 }
 
+/*
+* UTIL METHODS 
+*/
+
+const createGetter = (t, f) => {
+    let getter = '\tpublic ' + t + ' get' + capitalize(f) + '() {\n'
+    getter += '\t\treturn ' + f + ';\n';
+    getter += '\t}\n';
+    return getter;
+} 
+
+const createSetter = (t, f) => {
+    let setter = '\tpublic void set' + capitalize(f) + '(' + t + ' ' + f + ') { \n';
+    setter += '\t\tthis.' + f + ' = ' + f + ';\n';
+    setter += '\t}\n'; 
+    return setter;
+} 
+
+const createBuilder = (c, t, f) => {
+    let builderS = '\tpublic ' + c + ' ' + f + '(' + t + ' ' + f + ') { \n';
+    builderS += '\t\tthis.' + f + ' = ' + f + ';\n';
+    builderS += '\t\treturn this;\n';
+    builderS += '\t}\n'; 
+    return builderS;
+} 
+
 const capitalize = (s) => {
     if (typeof s !== 'string') return ''
     return s.charAt(0).toUpperCase() + s.slice(1)
+  }
+const unCapitalize = (s) => {
+    if (typeof s !== 'string') return ''
+    return s.charAt(0).toLowerCase() + s.slice(1)
   }

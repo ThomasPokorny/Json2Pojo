@@ -9,7 +9,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-        <script src="json.to.pojo.min.js"></script>
+        <script src="json.to.pojo.js"></script>
         <script src="main.js"></script>
 
         <style>
@@ -68,9 +68,26 @@
                     Packagedefinition:
                     <input placeholder="com.foobar.pojos" id="package-definition" type="text" style="width: 20vh; margin-right: 5vh; margin-left: 2vh;">
                 </span>
-                  <label>
-                    <input id="import-options" type="checkbox" />
+
+                  <label style="margin-right: 1.5vh;" >
+                    <input id="import-options" type="checkbox"/>
                     <span>Create import statements</span>
+                  </label>
+
+                  <label style="margin-right: 1.5vh;" >
+                    <input id="private-options" type="checkbox" />
+                    <span>Private fields</span>
+                  </label>
+
+
+                  <label style="margin-right: 1.5vh;" >
+                    <input id="gs-options" type="checkbox" />
+                    <span>Getter/Setter methods</span>
+                  </label>
+
+                  <label style="margin-right: 1.5vh;" >
+                    <input id="builder-options" type="checkbox" />
+                    <span>Builder methods</span>
                   </label>
 
               </div>

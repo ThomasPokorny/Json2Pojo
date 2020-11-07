@@ -9,6 +9,9 @@ const parse = () => {
         rootElementClassName = 'RootElement';
     }
 
+    /* Advanced Options */
+
+    // package naming
     let packageDefinition = "com.foobar.pojo";
     let isPackage = false;
     if(document.getElementById('package-options').style.visibility == 'visible' && document.getElementById("package-definition").value != '') {
@@ -16,16 +19,38 @@ const parse = () => {
         isPackage = true;
     }
 
+    // auto generation of import statements
     let isCreateImpots = false;
     if(document.getElementById('advanced-options').style.visibility == 'visible' && document.getElementById("import-options").checked) {
         isCreateImpots = true;
     }
 
+    // access modifier 'private' for created fields
+    let isPrivateFields = false;
+    if(document.getElementById('advanced-options').style.visibility == 'visible' && document.getElementById("private-options").checked) {
+        isPrivateFields = true;
+    }
+
+    // create getter and setter methods
+    let isCreateGS = false;
+    if(document.getElementById('advanced-options').style.visibility == 'visible' && document.getElementById("gs-options").checked) {
+        isCreateGS = true;
+    }
+
+    // create builder methods
+    let isBuilder = false;
+    if(document.getElementById('advanced-options').style.visibility == 'visible' && document.getElementById("builder-options").checked) {
+        isBuilder = true;
+    }
+
     let config = {};
-    config.identifier = rootElementClassName;
-    config.packageDefinition = packageDefinition;
-    config.isPackage = isPackage;
-    config.isCreateImpots = isCreateImpots;
+    config.identifier           = rootElementClassName;
+    config.packageDefinition    = packageDefinition;
+    config.isPackage            = isPackage;
+    config.isCreateImpots       = isCreateImpots;
+    config.isPrivateFields      = isPrivateFields;
+    config.isCreateGS           = isCreateGS;
+    config.isBuilder            = isBuilder;
 
     try{
         let pojos = [];
